@@ -1,10 +1,3 @@
-/*
- * @Author: chenjingyu
- * @Date: 2023-06-19 17:20:56
- * @LastEditTime: 2023-08-02 13:56:24
- * @Description: palm detector
- * @FilePath: \Mediapipe-MNN\source\PalmDetector.h
- */
 #pragma once
 
 #include "TypeDefines.h"
@@ -15,13 +8,13 @@
 #include <MNN/Interpreter.hpp>
 #include <MNN/Tensor.hpp>
 
-namespace mirror {
+namespace HandLib {
 class PalmDetector {
 public:
   PalmDetector() = default;
   ~PalmDetector();
 
-  bool LoadModel(const char *model_file);
+  bool LoadModel();
   void setFormat(int format);
   bool Detect(const ImageHead &in, RotateType type, std::vector<ObjectInfo> &objects);
   
@@ -45,4 +38,4 @@ private:
   const float normVals_[3] = {1 / 255.f, 1 / 255.f, 1 / 255.f};
 };
 
-} // namespace mirror
+} // namespace HandLib

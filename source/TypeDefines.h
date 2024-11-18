@@ -1,15 +1,8 @@
-/*
- * @Author: chenjingyu
- * @Date: 2023-06-19 17:18:41
- * @LastEditTime: 2023-08-20 01:17:26
- * @Description: type defines
- * @FilePath: \Mediapipe-MNN\source\TypeDefines.h
- */
 #pragma once
 
 #include <string>
 #include <vector>
-namespace mirror {
+namespace HandLib {
 using byte = unsigned char;
 struct Point2f {
   float x;
@@ -62,19 +55,19 @@ enum PixelFormat {
 };
 
 enum RotateType {
-  CLOCKWISE_ROTATE_0 = 0, ///< 图像不需要旋转,图像中的人脸为正脸
-  CLOCKWISE_ROTATE_90 = 1, ///< 图像需要顺时针旋转90度,使图像中的人脸为正
-  CLOCKWISE_ROTATE_180 = 2, ///< 图像需要顺时针旋转180度,使图像中的人脸为正
-  CLOCKWISE_ROTATE_270 = 3 ///< 图像需要顺时针旋转270度,使图像中的人脸为正
+  CLOCKWISE_ROTATE_0 = 0, ///< The image does not need to be rotated, and the face in the image is a frontal face
+  CLOCKWISE_ROTATE_90 = 1, ///< The image needs to be rotated 90 degrees clockwise to make the face frontal.
+  CLOCKWISE_ROTATE_180 = 2, ///< The image needs to be rotated 180 degrees clockwise to make the face frontal.
+  CLOCKWISE_ROTATE_270 = 3 ///< The image needs to be rotated 270 degrees clockwise to make the face frontal.
 };
 
 typedef struct ImageHead_t {
-  byte *data;               ///< 图像数据指针
-  PixelFormat pixel_format; ///< 像素格式
-  int width;                ///< 宽度(以像素为单位)
-  int height;               ///< 高度(以像素为单位)
-  int width_step;           ///< 跨度, 即每行所占的字节数
-  double time_stamp;        ///< 时间戳
+  byte *data;               
+  PixelFormat pixel_format; 
+  int width;                
+  int height;               
+  int width_step;           
+  double time_stamp;        
 } ImageHead;
 
 struct Embedding {
@@ -87,4 +80,4 @@ struct ClassifierInfo {
   float score;
 };
 
-} // namespace mirror
+} // namespace HandLib

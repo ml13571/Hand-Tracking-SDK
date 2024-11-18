@@ -1,10 +1,3 @@
-/*
- * @Author: chenjingyu
- * @Date: 2023-07-30 18:55:33
- * @LastEditTime: 2023-08-04 20:29:11
- * @Description: optional
- * @FilePath: \Mediapipe-MNN\source\optional.h
- */
 #pragma once
 
 #include <exception>
@@ -89,7 +82,7 @@ AISDK_NAMESPACE_END
 #define OPTIONAL_11_CONSTEXPR constexpr
 #endif
 
-namespace mirror {
+namespace HandLib {
 #ifndef MONOSTATE_INPLACE_MUTEX
 #define MONOSTATE_INPLACE_MUTEX
 /// Used to represent an optional with no data; essentially a bool
@@ -2029,16 +2022,16 @@ private:
   T *m_value;
 };
 
-} // namespace mirror
+} // namespace HandLib
 
 namespace std {
 // TODO SFINAE
-template <class T> struct hash<mirror::optional<T>> {
-  ::std::size_t operator()(const mirror::optional<T> &o) const {
+template <class T> struct hash<HandLib::optional<T>> {
+  ::std::size_t operator()(const HandLib::optional<T> &o) const {
     if (!o.has_value())
       return 0;
 
-    return std::hash<mirror::detail::remove_const_t<T>>()(*o);
+    return std::hash<HandLib::detail::remove_const_t<T>>()(*o);
   }
 };
 } // namespace std

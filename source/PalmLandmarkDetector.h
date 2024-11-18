@@ -1,10 +1,3 @@
-/*
- * @Author: chenjingyu
- * @Date: 2023-06-25 11:10:57
- * @LastEditTime: 2023-07-30 12:57:14
- * @Description: landmark detector module
- * @FilePath: \Mediapipe-MNN\source\PalmLandmarkDetector.h
- */
 #pragma once
 
 #include "TypeDefines.h"
@@ -15,13 +8,13 @@
 #include <MNN/Interpreter.hpp>
 #include <MNN/Tensor.hpp>
 
-namespace mirror {
+namespace HandLib {
 class PalmLandmarkDetector {
 public:
   PalmLandmarkDetector() = default;
   ~PalmLandmarkDetector();
 
-  bool LoadModel(const char *model_file);
+  bool LoadModel();
   void setFormat(int format);
   bool Detect(const ImageHead &in, RotateType type, std::vector<ObjectInfo> &objects);
 
@@ -40,5 +33,5 @@ private:
 };
 
 
-} // namespace mirror
+} // namespace HandLib
 

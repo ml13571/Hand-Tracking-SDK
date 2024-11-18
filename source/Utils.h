@@ -1,10 +1,3 @@
-/*
- * @Author: chenjingyu
- * @Date: 2023-06-20 12:29:31
- * @LastEditTime: 2023-08-22 10:24:23
- * @Description: utils module
- * @FilePath: \Mediapipe-MNN\source\Utils.h
- */
 #pragma once
 
 #include "TypeDefines.h"
@@ -12,7 +5,7 @@
 #include <cmath>
 #include <utility>
 
-namespace mirror {
+namespace HandLib {
 #ifndef M_PI
 #define M_PI 3.14159265358979323846 // pi
 #endif
@@ -80,4 +73,4 @@ Embedding FillFloatEmbedding(const float *data, int size, bool l2_normalize);
 Embedding FillQuantizedEmbedding(const float *data, int size,
                                  bool l2_normalize);
 
-} // namespace mirror
+} // namespace HandLib
