@@ -1,61 +1,96 @@
-# mediapipe mnn inference
- - Author: chenjingyu 20230619
+# Hand Tracking Linux SDK
+ This repo is for building hand tracking static library on Linux
 
-## 1.项目说明
- - mediapipe模型推理测试代码；
+## Install OpenCV
+To build library, OpenCV should be installed.</br>
+### 1. Update Package
+```bash
+sudo apt-get update
+sudo apt-get upgrade
+```
+### 2. Build and Install OpenCV
+```bash
+sudo apt-get install python3-pip -y
+sudo pip3 install numpy
+sudo apt-get install cmake build-essential pkg-config ant -y
+sudo apt-get install libtiff5-dev libopenexr-dev libwebp-dev libpng-dev -y
+sudo apt-get install libdc1394-22-dev libavcodec-dev libavformat-dev libswscale-dev libavresample-dev libv4l-dev -y
+sudo apt-get install libgtk-3-dev -y
+sudo apt-get install libtesseract-dev -y
+sudo apt-get install libhdf5-dev -y
+sudo apt-get install libopenblas-dev libopenblas-base liblapacke-dev -y
+sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev -y
+sudo apt-get install libtbb-dev -y
+```
+Due to a bug after installing the OpenBLAS lib (https://github.com/opencv/opencv/issues/12957), edit the opencv-4.5.0/cmake/OpenCVFindOpenBLAS.cmake file:
 
-## 2.更新日志
-时间 | 更新内容
---|--
-20230619 | 1.创建项目；2.添加相关依赖库；
-20230620 | 1.添加相关转换后mnn模型；
-20230625 | 1.添加手掌检测相关推理代码；
-20230626 | 1.添加手掌关键点模型相关推理代码；
-20230727 | 1.添加推理测试代码；
-20230729 | 1.添加人脸检测相关模型及基本推理代码；2.添加人脸检测相关解析代码及测试代码；3.添加Blazeface的大模型推理代码；
-20230730 | 1.添加Mediapipe的face mesh推理代码；2.添加MNN的人脸检测模型推理代码；
-20230802 | 1.添加最新版本的YuNet推理代码；
-20230814 | 1.添加image embedding相关推理代码；
-20230819 | 1.添加Knift模型推理代码；
-20230820 | 1.添加BlazePose人体检测模型及推理代码；2.添加BlazePose人体关键点检测模型及推理代码；3.添加图像分类模型及推理代码；
-20230822 | 1.添加mediapipe的selfie_segmentation模型推理demo；
+* Append the path `/usr/include/x86_64-linux-gnu` to `SET(Open_BLAS_INCLUDE_SEARCH_PATHS`
+* Append the path `/usr/lib/x86_64-linux-gnu` to `SET(Open_BLAS_LIB_SEARCH_PATHS`
 
-## 3.一些效果
-示例 | 效果图
---|--
-mediapipe-classifier | ![mediapipe-classifier](./data/results/mediapipe_classifier_result.jpg)
-mediapipe-face | ![mediapipe-face](./data/results/mediapipe_face.jpg)
-mediapipe-hand | ![mediapipe-hand](./data/results/mediapipe_hand.jpg)
-mediapipe-pose | ![mediapipe-pose](./data/results/mediapipe_pose.jpg)
-mediapipe-knift | ![mediapipe-knift](./data/results/mediapipe_knift.jpg)
-mediapipe-embbeding | ![mediapipe-embedding](./data/results/mediapipe-embbeding.jpg)
-mediapipe-selfie_segmentation | ![mediapipe-selfie_segmentation](./data/results/mediapipe_segment_result.jpg)
-YN-facedetection | ![YN-facedetection](./data/results/YN_face.jpg)
-Lite-facedetection | ![Lite-facedetection](./data/results/lite_face.jpg)
+Download and untar the [opencv-4.5.0](https://github.com/opencv/opencv/archive/4.5.0.tar.gz) and [opencv_contrib-4.5.0](https://github.com/opencv/opencv_contrib/archive/4.5.0.zip) source files.
 
-- 实测knift效果很差，大概率是我这边接的有问题，但是没发现是什么问题，脑壳疼！后面再研究一下mediapipe源码看看。
-
-## 4.参考项目
-- [1] [mediapipe](https://github.com/google/mediapipe)
-
-## 5.可视化网络输入
-```C++
-#include <opencv2/opencv.hpp>
-
-using namespace MNN;
-CV::ImageProcess::Config image_process_config;
-image_process_config.filterType = CV::BILINEAR;
-image_process_config.sourceFormat = CV::BGR;
-image_process_config.destFormat = CV::BGR;
-image_process_config.wrap = CV::ZERO;
-std::shared_ptr<CV::ImageProcess> pretreat =
-  std::shared_ptr<CV::ImageProcess>(CV::ImageProcess::create(image_process_config));
-pretreat->setMatrix(trans_);
-
-cv::Mat dst_image = cv::Mat(input_h_, input_w_, CV_8UC3);
-std::shared_ptr<MNN::Tensor> dst_tensor(MNN::Tensor::create<uint8_t>(std::vector<int>{1, dst_image.rows, dst_image.cols, dst_image.channels()}, dst_image.data));
-pretreat->convert((uint8_t *)in.data, in.width, in.height, in.width_step, dst_tensor.get());
-cv::imshow("result", dst_image);
-cv::waitKey(0);
+Considering that we have the files unzipped under the /tmp folder.
+```bash
+cd /tmp/opencv-4.5.0
+mkdir build
+cd build
 ```
 
+Run
+
+```bash
+cmake -D CMAKE_BUILD_TYPE=RELEASE \	
+-D CMAKE_INSTALL_PREFIX=/usr/local \	
+-D WITH_TBB=OFF \	
+-D WITH_IPP=OFF \	
+-D WITH_1394=OFF \	
+-D BUILD_WITH_DEBUG_INFO=OFF \	
+-D BUILD_DOCS=OFF \	
+-D INSTALL_C_EXAMPLES=ON \	
+-D INSTALL_PYTHON_EXAMPLES=ON \	
+-D BUILD_EXAMPLES=OFF \	
+-D BUILD_TESTS=OFF \	
+-D BUILD_PERF_TESTS=OFF \	
+-D WITH_QT=OFF \	
+-D WITH_GTK=ON \	
+-D WITH_OPENGL=ON \	
+-D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-4.5.0/modules \	
+-D WITH_V4L=ON  \	
+-D WITH_FFMPEG=ON \	
+-D WITH_XINE=ON \	
+-D BUILD_NEW_PYTHON_SUPPORT=ON \	
+-D OPENCV_GENERATE_PKGCONFIG=ON ../	
+```
+Finally, build and install OpenCV as follows. (It will take some 30~40 minutes to build.)
+```bash
+make
+sudo make install
+sudo ldconfig
+```
+## 1. How To Build
+ - Create new folder "build" as below
+ ```bash
+ mkdir build
+ ```
+ - Build project
+ ```bash
+ cmake .. && make
+ ```
+ - Run app (webcam should be connected to run app)
+ ```bash
+ ./test
+ ```
+
+ ## 2. How To Build Static Library Which Doesn't Need MNN & OpenCV Dependencies
+ Copy all files in folder "source" into the folder in `3rdLibs/MNN-2.3.0/source`.</br>
+ Update CMakeLists.txt in MNN-2.3.0 accordingly and build MNN-2.3.0 source code. Once building is completed, `libHand.a` file would be generated.</br>
+ The pre-built shared library(`libHand.a`) and demo project to run it has been added to this project.(`Handlib-Linux-a/lib/libHand.a`)</br>
+ - Go to the following path: `Handlib-Linux-a`
+ - Create new folder "build"
+ ```bash
+ mkdir build
+ ```
+ - build and run app
+ ```bash
+ cmake .. && make
+ ```
